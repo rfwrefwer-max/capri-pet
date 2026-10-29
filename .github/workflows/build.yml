@@ -1,0 +1,42 @@
+name: Build CapriPet IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate Xcode Project
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Build Unsigned Archive
+        run: |
+          xcodebuild -project CapriPet.xcodeproj \
+            -scheme CapriPet \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            clean build
+
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/CapriPet.app Payload/
+          zip -r CapriPet.ipa Payload
+
+      - name: Upload CapriPet.ipa
+        uses: actions/upload-artifact@v4
+        with:
+          name: CapriPet-IPA
+          path: CapriPet.ipa
