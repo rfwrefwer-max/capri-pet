@@ -1,0 +1,26 @@
+name: CapriPet
+options:
+  bundleIdPrefix: com.edgerunners
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  CapriPet:
+    type: application
+    platform: iOS
+    sources:
+      - CapriPetApp.swift
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: Capri AI
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIBackgroundModes:
+          - audio
+          - fetch
+        NSPhotoLibraryUsageDescription: "Нужно для чтения скриншотов экрана"
+        CFBundleURLTypes:
+          - CFBundleURLName: com.edgerunners.capripet
+            CFBundleURLSchemes:
+              - capripet
